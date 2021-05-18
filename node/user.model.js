@@ -15,12 +15,12 @@ userSchema.pre('save', function(next) {
         bcrypt.genSalt(10, function(err, salt) {
             if(err) {
                 console.log('hiba a salt generalasa soran');
-                return next(error);
+                return next(err);
             }
-            bcrypt.hash(user.password, salt, function(error, hash) {
-                if(error) {
+            bcrypt.hash(user.password, salt, function(err, hash) {
+                if(err) {
                     console.log('hiba a hasheles soran');
-                    return next(error);
+                    return next(err);
                 }
                 user.password = hash;
                 return next();
