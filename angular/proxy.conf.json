@@ -1,0 +1,10 @@
+{
+    "/server": {
+      "target": "https://thawing-forest-98860.herokuapp.com",
+      "secure": true,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/server": ""
+      }
+    }
+  }
