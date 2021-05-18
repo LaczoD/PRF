@@ -12,7 +12,14 @@ const expressSession = require('express-session');
 const app = express();
 
 const port = process.env.PORT || 3000;
-const dbUrl = 'mongodb+srv://admin:danika@prf-cluster.ujmos.mongodb.net/test?retryWrites=true&w=majority'
+const dbUrl = 'mongodb+srv://admin:danika@prf-cluster.ujmos.mongodb.net/beadando?retryWrites=true&w=majority';
+
+//Mongo warning handling
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
 mongoose.connect(dbUrl);
 
 const whitelist = ['https://<project_id>.web.app', 
@@ -73,7 +80,7 @@ passport.deserializeUser(function (user, done) {
     return done(null, user);
 });
 
-app.use(expressSession({ secret: 'prf2021lassananodejsvegereerunk', resave: true }));
+app.use(expressSession({ secret: 'prf2021lassananodejsvegereerunk', resave: true,  saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
