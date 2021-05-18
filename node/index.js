@@ -105,7 +105,7 @@ app.use('/', require('./routes'));
 // REST - Representative State Transfer, GET - Read, POST - Create, PUT - Update, DELETE - Delete
 
 app.use((req, res, next) => {
-    console.log('ez a hibakezelo');
+    console.log('ez a hibakezelo: req: ',req.body, ' res: ', res.body, ' next: ', next);
     res.status(404).send('A kert eroforras nem talalhato');
 })
 

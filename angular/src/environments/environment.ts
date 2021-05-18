@@ -5,9 +5,9 @@
 export const environment = {
   production: false,
   custom: 'This is PRF dev',
-  serverUrl: 'http://localhost:4200/server',
-  springUrl: 'https://pure-journey-16560.herokuapp.com'
-  //serverUrl: 'http://localhost:3000/'
+  //serverUrl: 'http://localhost:4200/server',
+  springUrl: 'https://pure-journey-16560.herokuapp.com',
+  serverUrl: 'http://localhost:3000'
 };
 
 /*
