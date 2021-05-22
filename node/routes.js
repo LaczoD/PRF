@@ -133,18 +133,18 @@ router.route('/product').get((req, res, next) => {
 //cart
 
 router.route('/cart').get((req, res, next) => {
-    productModel.find({}, (err, data) => {
+    cartModel.findOne({username: req.body.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);
     })
 }).post((req, res, next) => {
-    if(req.body.name && req.body.price) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+    if(req.body.username) {
+        cartModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
                 return res.status(400).send('már van ilyen product');
             } else {
-                const example = new productModel({name: req.body.name, price: req.body.price});
+                const example = new cartModel({username: req.body.username, product: req.body.product});
                 example.save((error) => {
                     if(error) return res.status(500).send('A mentes soran hiba tortent');
                     return res.status(200).send('Sikeres mentes tortent');
@@ -152,14 +152,14 @@ router.route('/cart').get((req, res, next) => {
             }
         })
     } else {
-        return res.status(400).send('Nem volt name vagy price');
+        return res.status(400).send('Nem volt username vagy product');
     }
 }).put((req, res, next) => {
-    if(req.body.id && req.body.value) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+    if(req.body.username && req.body.product) {
+        cartModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
-                data.price = req.body.price;
+                data.product = req.body.product;
                 data.save((error) => {
                     if(error) return res.status(500).send('A mentes soran hiba tortent');
                     return res.status(200).send('Sikeres mentes tortent');
@@ -173,7 +173,7 @@ router.route('/cart').get((req, res, next) => {
     }
 }).delete((req, res, next) => {
     if(req.body.name) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+        cartModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
                 data.delete((error) => {
@@ -181,29 +181,29 @@ router.route('/cart').get((req, res, next) => {
                     return res.status(200).send('Sikeres torles tortent');
                 })
             } else {
-                return res.status(400).send('Nincs ilyen id az adatbázisban');
+                return res.status(400).send('Nincs ilyen username az adatbázisban');
             }
         })
     } else {
-        return res.status(400).send('Nem volt nev');
+        return res.status(400).send('Nem volt usernev');
     }
 })
 
 //order
 
-router.route('/cart').get((req, res, next) => {
-    productModel.find({}, (err, data) => {
+router.route('/order').get((req, res, next) => {
+    orderModel.findOne({username: req.body.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);
     })
 }).post((req, res, next) => {
-    if(req.body.name && req.body.price) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+    if(req.body.username) {
+        orderModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
                 return res.status(400).send('már van ilyen product');
             } else {
-                const example = new productModel({name: req.body.name, price: req.body.price});
+                const example = new orderModel({username: req.body.username, cart: req.body.cart, date: Date.now});
                 example.save((error) => {
                     if(error) return res.status(500).send('A mentes soran hiba tortent');
                     return res.status(200).send('Sikeres mentes tortent');
@@ -211,14 +211,14 @@ router.route('/cart').get((req, res, next) => {
             }
         })
     } else {
-        return res.status(400).send('Nem volt name vagy price');
+        return res.status(400).send('Nem volt username vagy product');
     }
 }).put((req, res, next) => {
-    if(req.body.id && req.body.value) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+    if(req.body.username && req.body.cart) {
+        orderModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
-                data.price = req.body.price;
+                data.cart = req.body.cart;
                 data.save((error) => {
                     if(error) return res.status(500).send('A mentes soran hiba tortent');
                     return res.status(200).send('Sikeres mentes tortent');
@@ -232,7 +232,7 @@ router.route('/cart').get((req, res, next) => {
     }
 }).delete((req, res, next) => {
     if(req.body.name) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+        orderModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
                 data.delete((error) => {
@@ -240,14 +240,13 @@ router.route('/cart').get((req, res, next) => {
                     return res.status(200).send('Sikeres torles tortent');
                 })
             } else {
-                return res.status(400).send('Nincs ilyen id az adatbázisban');
+                return res.status(400).send('Nincs ilyen username az adatbázisban');
             }
         })
     } else {
-        return res.status(400).send('Nem volt nev');
+        return res.status(400).send('Nem volt usernev');
     }
 })
-
 
 
 module.exports = router;
