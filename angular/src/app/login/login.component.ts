@@ -11,15 +11,18 @@ export class LoginComponent implements OnInit {
 
   username: string;
   password: string;
+  accessLevel: string;
 
   constructor(private loginService: LoginService, private router: Router) {
     this.username = '';
     this.password = '';
+    this.accessLevel = '';
   }
 
   login() {
     if (this.username != '' && this.password != '') {
-      this.loginService.login(this.username, this.password).subscribe(msg => {
+      //TODO: iderakni egy accesslevel lekerest
+      this.loginService.login(this.username, this.password, this.accessLevel).subscribe(msg => {
         console.log(msg);
         localStorage.setItem('user', this.username);
         this.router.navigate(['/first']);
@@ -31,6 +34,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (localStorage.getItem('user')) {
+      localStorage.setItem('access', this.accessLevel);
       localStorage.removeItem('user');
       this.loginService.logout().subscribe(msg => {
         console.log(msg);

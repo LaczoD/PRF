@@ -9,8 +9,8 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
-  login(username: string, password: string) {
-    return this.http.post(environment.serverUrl + '/login', {username: username, password: password}, 
+  login(username: string, password: string, accessLevel: string) {
+    return this.http.post(environment.serverUrl + '/login', {username: username, password: password, accessLevel: accessLevel}, 
     {withCredentials: true, 
     responseType: 'text', observe: 'response' as 'response'});
   }

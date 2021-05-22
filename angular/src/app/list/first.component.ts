@@ -14,7 +14,7 @@ export class FirstComponent implements OnInit {
     console.log(environment);
   }
 
-  title = 'PRF';
+  title = 'Webshop';
 
   example = ['1_elem'];
 
@@ -29,7 +29,7 @@ export class FirstComponent implements OnInit {
     } else {
       this.title = 'PRF';
     }
-    this.example.push(Math.floor(Math.random()*100) + '_elem');
+
     this.connectionService.greet().subscribe(data => {
       console.log('This came from the server: ', data);
     }, error => {

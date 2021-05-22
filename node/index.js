@@ -51,6 +51,9 @@ mongoose.connection.on('error', (err) => {
 
 require('./example.model');
 require('./user.model');
+require('./product.model');
+require('./cart.model');
+require('./order.model');
 
 const userModel = mongoose.model('user');
 

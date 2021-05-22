@@ -11,6 +11,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'first', component: FirstComponent, canActivate: [AuthGuard]},
   {path: 'second/:id', component: SecondComponent, canActivate: [AuthGuard]},
+  {path: 'orders', component: FirstComponent, canActivate: [AuthGuard]},
   {path: '**', component: ErrorComponent}
 ];
 
