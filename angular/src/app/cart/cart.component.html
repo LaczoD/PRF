@@ -1,0 +1,21 @@
+<div class="content" role="main">
+
+    <!-- Highlight Card -->
+    <div class="card highlight-card card-small">
+  
+      <span>Kosaram</span>
+    </div>
+
+    <button (click)="goToFirst()">Vissza a Webshopra</button>
+  
+    <ul>
+        <li *ngFor="let x of products"> <!-- Structural Directive 2 -->
+          {{x.name}}
+  
+          <button (click)="delFromCart(x)">Kosárba</button>
+        </li>
+      </ul>
+      <button (click)="logout()">Kijelentkezés</button>
+
+
+  </div>

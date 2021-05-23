@@ -16,38 +16,45 @@ export class FirstComponent implements OnInit {
 
   title = 'Webshop';
 
-  example = ['1_elem'];
+  products:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
 
-  goToSecond() {
-    this.router.navigate(['/second', 'PRF', {message: this.title}]);
+
+
+  goToSecond(username: String) {
+    this.router.navigate(['/second/'+username]);
   }
 
-  hello() {
-    console.log('Hello World!');
-    if(this.title === 'PRF') {
-      this.title = 'NOT PRF';
-    } else {
-      this.title = 'PRF';
-    }
-
-    this.connectionService.greet().subscribe(data => {
-      console.log('This came from the server: ', data);
-    }, error => {
-      console.log('Sorry we encountered an error: ', error);
-    });
-
-    this.connectionService.getTodos().subscribe(res => {
-      console.log('spring response', res);
-    }, error => {
-      console.log('error on the spring part', error);
-    })
+  goToCart(username: String) {
+    this.router.navigate(['/cart/'+username]);
   }
 
-  helloFrom(st: string) {
+  logout() {
+    this.router.navigate(['/login']);
+  }
+
+  helloFrom(st: String) {
     console.log('Hello from ' + st);
   }
 
+  toCart(product: {name:String, description:String, price:Number, quantity:Number}) {
+    console.log('Kosarba dobva: ' + product.name);
+    this.connectionService.putCart(product).subscribe(data => {
+      for(var x of JSON.parse(data)) {
+        this.products.push(x);
+        console.log(this.products);
+      }
+    }, error => {
+      console.log('Hiba kosarba adas soran: ', error);
+    });
+  }
+
   ngOnInit(): void {
+    this.connectionService.getProducts().subscribe(data => {
+      for(var x of JSON.parse(data)) {
+        this.products.push(x);
+      }
+    });
+
   }
 
   /**

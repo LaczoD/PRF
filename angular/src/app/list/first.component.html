@@ -1,28 +1,31 @@
 <div class="content" role="main">
 
     <!-- Highlight Card -->
-    <div class="card highlight-card card-small" (click)="hello()"> <!-- Template Statement -->
+    <div class="card highlight-card card-small"> <!-- Template Statement -->
   
-      <span>{{ title }} app is running!</span> <!-- Template Interpolation -->
+      <span>{{ title }}</span> <!-- Template Interpolation -->
     </div>
   
-    <div *ngIf="title == 'PRF'"> <!-- Structural Directive 1 -->
+    <div *ngIf="title == 'Webshop'"> <!-- Structural Directive 1 -->
       <span>
-        {{1.6897 * 0.878 + 2547.785 * 35.789}} <!-- Template Expression -->
+        <button (click)="goToCart('user')">Kosaram</button> <!-- TODO: ez legyen dinamikus-->
       </span>
     </div>
     <ul>
-      <li *ngFor="let x of example" (click)="helloFrom(x)"> <!-- Structural Directive 2 -->
-        {{x}}
+      <li *ngFor="let x of products"> <!-- Structural Directive 2 -->
+        {{x.name}}
+
+        <button (click)="toCart(x)">Kosárba</button>
       </li>
     </ul>
-    <input type="text" [(ngModel)]="title"> <!-- Attribute Directive -->
-    <button (click)="goToSecond()">Second</button>
-    <a [routerLink]="['/login']">Logout</a>
+    <button (click)="logout()">Kijelentkezés</button>
+
   </div>
 
 <!-- 
 <div>
+      <input type="text" [(ngModel)]="title">
+      <a [routerLink]="['/login']">Logout</a>
   <ul>
     <li *ngFor="let x of example" (click)="helloFrom(x)">
       {{x}}

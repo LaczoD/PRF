@@ -13,13 +13,6 @@ export class SecondComponent implements OnInit {
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      console.log(params.keys);
-      console.log(params.get('message'));
-      this.message = params.get('id') + '  ' + params.get('message')
-    }, error => {
-      console.log('parammap error', error);
-    })
   }
 
 }
