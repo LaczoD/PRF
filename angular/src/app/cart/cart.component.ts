@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class CartComponent implements OnInit {
 
-  username = '';
+  username:String = '';
   products:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
 
   constructor(private connectionService: ConnectionService, private router: Router) { }
@@ -20,7 +20,13 @@ export class CartComponent implements OnInit {
   }
 
   delFromCart(product: {name:String, description:String, price:Number, quantity:Number}) {
-    //TODO
+    //TODO decrement quantity
+    //add object back into list
+    //if quantity = 0 del object from db
+  }
+
+  buy() {
+    //TODO everything goes to orders
   }
 
   goToList() {

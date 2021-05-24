@@ -2,7 +2,6 @@
 
     <!-- Highlight Card -->
     <div class="card highlight-card card-small">
-  
       <span>Kosaram</span>
     </div>
 
@@ -15,12 +14,13 @@
 
   
     <ul>
-        <li *ngFor="let x of products"> <!-- Structural Directive 2 -->
-          {{x.name}}
+        <li *ngFor="let x of products">
+          {{x.name}}: {{x.price}} Ft {{x.quantity}} db raktáron 
   
           <button (click)="delFromCart(x)">Törlés</button>
         </li>
       </ul>
+      <button (click)="buy()">Megrendelés</button>
       <button (click)="logout()">Kijelentkezés</button>
 
 

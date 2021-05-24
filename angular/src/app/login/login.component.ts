@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
       this.loginService.login(this.username, this.password, this.accessLevel).subscribe(msg => {
         console.log(msg);
         localStorage.setItem('user', this.username);
-        this.router.navigate(['/first']);
+        this.router.navigate(['/list']);
       }, error => {
         console.log(error);
       })
