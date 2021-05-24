@@ -27,6 +27,10 @@ export class CartComponent implements OnInit {
     this.router.navigate(['/list']);
   }
 
+  goToOrders() {
+    this.router.navigate(['/order/'+localStorage.getItem('user')]);
+  }
+
 
   ngOnInit(): void {
     this.connectionService.getCart().subscribe(data => {

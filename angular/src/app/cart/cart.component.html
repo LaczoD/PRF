@@ -6,7 +6,13 @@
       <span>Kosaram</span>
     </div>
 
-    <button (click)="goToList()">Vissza a Webshopra</button>
+    <div>
+      <span>
+        <button (click)="goToList()">Vissza a Webshopra</button>
+        <button (click)="goToOrders()">Rendeléseim</button>
+      </span>
+    </div>
+
   
     <ul>
         <li *ngFor="let x of products"> <!-- Structural Directive 2 -->
