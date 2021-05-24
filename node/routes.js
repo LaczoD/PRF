@@ -132,17 +132,18 @@ router.route('/product').get((req, res, next) => {
 
 //cart
 
-router.route('/cart').get((req, res, next) => {
+router.route('/cart/:username').get((req, res, next) => {
     cartModel.find({username: req.body.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);
+        console.log(req.body.username + ' cart get');
     })
 }).post((req, res, next) => {
     if(req.body.username) {
-        cartModel.findOne({username: req.body.username}, (err, data) => {
+        cartModel.findOne({username: req.body.username, name: req.body.product.name}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
-                return res.status(400).send('már van ilyen product');
+                return res.status(400).send('már van ilyen product: ' + req.body.product.name);
             } else {
                 const example = new cartModel({username: req.body.username, product: req.body.product});
                 example.save((error) => {
@@ -191,7 +192,7 @@ router.route('/cart').get((req, res, next) => {
 
 //order
 
-router.route('/order').get((req, res, next) => {
+router.route('/order/:username').get((req, res, next) => {
     orderModel.findOne({username: req.body.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);

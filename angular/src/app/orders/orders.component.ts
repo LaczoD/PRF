@@ -29,6 +29,15 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //TODO: getOrder-t megcsinálni
+    this.connectionService.getOrder().subscribe(data => {
+      for(var x of JSON.parse(data)) {
+        this.products.push(x);
+      }
+    },err => {
+      console.log("Ures a kosar!");
+      this.connectionService.createCart();
+    });
   }
 
 }

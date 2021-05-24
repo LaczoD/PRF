@@ -24,11 +24,11 @@ export class ConnectionService {
 
 
   getCart() {
-    return this.http.get(environment.serverUrl+'/cart',{responseType: 'text', withCredentials: true});
+    return this.http.get(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{ responseType: 'text', withCredentials: true});
   }
 
   createCart() {
-    return this.http.put(environment.serverUrl+'/cart',{username: localStorage.getItem('user'),  responseType: 'text', withCredentials: true});
+    return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'),  responseType: 'text', withCredentials: true});
   }
 
   putCart(prod: {name:String, description:String, price:Number, quantity:Number} ) {
@@ -42,6 +42,11 @@ export class ConnectionService {
     });
     product.push(prod);
     return this.http.put(environment.serverUrl+'/cart',{username: localStorage.getItem('user'), product: product},{responseType: 'text', withCredentials: true});
+  }
+
+
+  getOrder() {
+    return this.http.get(environment.serverUrl+'/order',{responseType: 'text', withCredentials: true});
   }
 
 }
