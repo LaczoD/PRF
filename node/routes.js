@@ -91,7 +91,7 @@ router.route('/product').get((req, res, next) => {
     }
 }).put((req, res, next) => {
     if(req.body.name && req.body.quantity) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+        productModel.find({name: req.body.name}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
                 if(req.body.description) {
@@ -114,7 +114,7 @@ router.route('/product').get((req, res, next) => {
     }
 }).delete((req, res, next) => {
     if(req.body.name) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+        productModel.find({name: req.body.name}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
                 data.delete((error) => {
@@ -133,7 +133,7 @@ router.route('/product').get((req, res, next) => {
 //cart
 
 router.route('/cart').get((req, res, next) => {
-    cartModel.findOne({username: req.body.username}, (err, data) => {
+    cartModel.find({username: req.body.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);
     })

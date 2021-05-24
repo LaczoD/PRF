@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { ConnectionService } from '../utils/connection.service';
 import { Router } from '@angular/router';
 
@@ -34,6 +33,9 @@ export class CartComponent implements OnInit {
       for(var x of JSON.parse(data)) {
         this.products.push(x);
       }
+    },err => {
+      console.log("Ures a kosar!");
+      this.connectionService.createCart();
     });
   }
 }

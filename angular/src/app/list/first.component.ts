@@ -19,13 +19,12 @@ export class FirstComponent implements OnInit {
   products:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
 
 
-
-  goToSecond(username: String) {
-    this.router.navigate(['/second/'+username]);
+  goToCart() {
+    this.router.navigate(['/cart/'+localStorage.getItem('user')]);
   }
 
-  goToCart(username: String) {
-    this.router.navigate(['/cart/'+username]);
+  goToOrders() {
+    this.router.navigate(['/order/'+localStorage.getItem('user')]);
   }
 
   logout() {

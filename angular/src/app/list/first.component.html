@@ -8,13 +8,12 @@
   
     <div *ngIf="title == 'Webshop'"> <!-- Structural Directive 1 -->
       <span>
-        <button (click)="goToCart('user')">Kosaram</button> <!-- TODO: ez legyen dinamikus-->
+        <button (click)="goToCart()">Kosaram</button> <!-- TODO: ez legyen dinamikus-->
       </span>
     </div>
     <ul>
       <li *ngFor="let x of products"> <!-- Structural Directive 2 -->
-        {{x.name}}
-
+        {{x.name}}: {{x.price}} Ft {{x.quantity}} db raktáron 
         <button (click)="toCart(x)">Kosárba</button>
       </li>
     </ul>
