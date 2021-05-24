@@ -23,8 +23,8 @@ export class CartComponent implements OnInit {
     //TODO
   }
 
-  goToFirst() {
-    this.router.navigate(['/first']);
+  goToList() {
+    this.router.navigate(['/list']);
   }
 
 

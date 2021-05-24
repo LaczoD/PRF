@@ -6,13 +6,14 @@
       <span>{{ title }}</span> <!-- Template Interpolation -->
     </div>
   
-    <div *ngIf="title == 'Webshop'"> <!-- Structural Directive 1 -->
+    <div> <!-- Structural Directive 1 -->
       <span>
-        <button (click)="goToCart()">Kosaram</button> <!-- TODO: ez legyen dinamikus-->
+        <button (click)="goToCart()">Kosaram</button>
+        <button (click)="goToOrders()">Rendelések</button>
       </span>
     </div>
     <ul>
-      <li *ngFor="let x of products"> <!-- Structural Directive 2 -->
+      <li *ngFor="let x of products">
         {{x.name}}: {{x.price}} Ft {{x.quantity}} db raktáron 
         <button (click)="toCart(x)">Kosárba</button>
       </li>
