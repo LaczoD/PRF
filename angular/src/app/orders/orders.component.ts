@@ -35,7 +35,7 @@ export class OrdersComponent implements OnInit {
         this.products.push(x);
       }
     },err => {
-      console.log("Ures a kosar!");
+      console.log("Nem tortent meg rendeles!");
       this.connectionService.createCart();
     });
   }

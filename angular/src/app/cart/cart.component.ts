@@ -38,13 +38,18 @@ export class CartComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.connectionService.getCart().subscribe(data => {
-      for(var x of JSON.parse(data)) {
+      var cart =  JSON.parse(data);
+      console.log(cart);
+      
+      for(var x of cart) {
         this.products.push(x);
       }
+      
+      
     },err => {
-      console.log("Ures a kosar!");
+      console.log("Hiba a kosar betoltese kozben!");
       this.connectionService.createCart();
     });
   }

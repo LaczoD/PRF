@@ -133,10 +133,13 @@ router.route('/product').get((req, res, next) => {
 //cart
 
 router.route('/cart/:username').get((req, res, next) => {
-    cartModel.find({username: req.body.username}, (err, data) => {
+    cartModel.find({username: req.query.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);
-        console.log(req.body.username + ' cart get');
+        console.log(req.query.username + ' cart get:');
+        console.log(data);
+    }, err => {
+        console.log('Nincs ilyen user kosar!');
     })
 }).post((req, res, next) => {
     if(req.body.username) {

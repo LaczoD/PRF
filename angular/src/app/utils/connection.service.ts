@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
@@ -24,7 +24,13 @@ export class ConnectionService {
 
 
   getCart() {
-    return this.http.get(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{ responseType: 'text', withCredentials: true});
+    let usr = JSON.stringify(localStorage.getItem('user'));
+    usr = usr.replace('"','');
+    usr = usr.replace('"','');
+    let params = new HttpParams().set('username', usr);
+
+    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' - username: '+ usr);
+    return this.http.get(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{params: params, responseType: 'text', withCredentials: true});
   }
 
   createCart() {
@@ -38,7 +44,7 @@ export class ConnectionService {
         product.push(x);
       }
     }, error => {
-      console.log('Hiba putCart-ban, a product tömb olvasásánál: ', error);
+      console.log('Hiba getCart-ban, a product tömb olvasásánál: ', error);
     });
     product.push(prod);
     return this.http.put(environment.serverUrl+'/cart',{username: localStorage.getItem('user'), product: product},{responseType: 'text', withCredentials: true});
