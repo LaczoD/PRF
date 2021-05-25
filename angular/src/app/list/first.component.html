@@ -14,7 +14,7 @@
     </div>
     <ul>
       <li *ngFor="let x of products">
-        {{x.name}}: {{x.price}} Ft {{x.quantity}} db raktáron 
+        {{x.name}}: {{x.price}} Ft - {{x.quantity}} db 
         <button (click)="toCart(x)">Kosárba</button>
       </li>
     </ul>

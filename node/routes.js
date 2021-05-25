@@ -136,8 +136,7 @@ router.route('/cart/:username').get((req, res, next) => {
     cartModel.find({username: req.query.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);
-        console.log(req.query.username + ' cart get:');
-        console.log(data);
+        console.log(req.query.username + ' cart get');
     }, err => {
         console.log('Nincs ilyen user kosar!');
     })

@@ -11,17 +11,16 @@
         <button (click)="goToOrders()">Rendeléseim</button>
       </span>
     </div>
-
   
     <ul>
-        <li *ngFor="let x of products">
-          {{x.name}}: {{x.price}} Ft {{x.quantity}} db raktáron 
-  
-          <button (click)="delFromCart(x)">Törlés</button>
-        </li>
-      </ul>
-      <button (click)="buy()">Megrendelés</button>
-      <button (click)="logout()">Kijelentkezés</button>
-
+        <div *ngFor="let x of carts">
+          <li *ngFor="let prod of x.product">
+            {{prod.name}}: {{prod.price}} Ft - {{prod.quantity}} db 
+            <button (click)="delFromCart(prod)">Törlés</button>
+          </li>
+        </div>
+    </ul>
+    <button (click)="buy()">Megrendelés</button>
+    <button (click)="logout()">Kijelentkezés</button>
 
   </div>
