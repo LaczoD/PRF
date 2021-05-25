@@ -31,9 +31,6 @@ export class FirstComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  helloFrom(st: String) {
-    console.log('Hello from ' + st);
-  }
 
   toCart(product: {name:String, description:String, price:Number, quantity:Number}) {
     console.log('Kosarba dobva: ' + product.name);
@@ -56,28 +53,4 @@ export class FirstComponent implements OnInit {
 
   }
 
-  /**
-   * title = 'Áruház';
-  example = ['1_elem'];
-
-  hello() {
-    console.log('Hello world!');
-    if(this.title == 'PRF') {
-      this.title = 'NOT PRF';
-    } else {
-      this.title = 'PRF';
-    }
-    this.example.push(Math.floor(Math.random()*100)+'_elem');
-    this.connectionService.greet().subscribe(data => {
-      console.log('This came from the server: '+ data);
-    }, error => {
-      console.log('Sorry we encountered an error: '+ error);
-    });
-  }
-
-  helloFrom(st: string) {
-    console.log('Hello from '+ st +'!');
-  }
-
-   */
 }

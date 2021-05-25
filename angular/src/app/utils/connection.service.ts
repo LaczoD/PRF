@@ -38,7 +38,16 @@ export class ConnectionService {
   }
 
   putCart(prod: {name:String, description:String, price:Number, quantity:Number} ) {
-    const product:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
+
+    /** TODO:
+     * -Dekrementálom a product quantityt quantity: old.data.quantity
+     * -rákeresek a product nevére
+     * --Ha van már olyanom, akkor put és inkrementalom a quantityt a kosárban
+     * --Ha nincs olyanom, akkor post és létrehozom a productot benne
+     * 
+     * **/
+
+    var product:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
     this.getCart().subscribe((data) => {
       for(var x of JSON.parse(data)) {
         product.push(x);
@@ -47,7 +56,9 @@ export class ConnectionService {
       console.log('Hiba getCart-ban, a product tömb olvasásánál: ', error);
     });
     product.push(prod);
-    return this.http.put(environment.serverUrl+'/cart',{username: localStorage.getItem('user'), product: product},{responseType: 'text', withCredentials: true});
+
+    //TODO: inkrementalni hogy ha van már olyanom
+    return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: product},{responseType: 'text', withCredentials: true});
   }
 
 
