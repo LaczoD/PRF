@@ -16,6 +16,7 @@ export class CartComponent implements OnInit {
       description:String,
       price:Number,
       quantity:Number}]}> = [];
+  sumToPay:number = 0;
 
   constructor(private connectionService: ConnectionService, private router: Router) { }
 
@@ -25,10 +26,29 @@ export class CartComponent implements OnInit {
   }
 
   delFromCart(product: {name:String, description:String, price:Number, quantity:Number}) {
-    //TODO decrement quantity
-    //and
+    //decrement quantity
     //add object back into list
     //if quantity = 0 del object from db
+    var prod:any = product;
+    prod.quantity = prod.quantity-1;
+    if (prod.quantity == 0) {
+      //del
+      this.connectionService.delCart(prod).subscribe(data => {
+        console.log("Arucikk sikeres uritese a kosarbol!");
+      },err => {
+        console.log("Hiba az arucikk uritese kozben!");
+        this.connectionService.createCart();
+      });
+    } else {
+      //put
+      this.connectionService.putCart(prod).subscribe(data => {
+        console.log("Arucikk dekrementalasa!");
+      },err => {
+        console.log("Hiba az arucikk dekrementalasa kozben!");
+        this.connectionService.createCart();
+      });
+    }
+
   }
 
   buy() {
@@ -46,14 +66,12 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {    
     this.connectionService.getCart().subscribe(data => {
-      var received =  JSON.parse(data);
-      console.log(received);
-      var cart_1 = received[0];
-      console.log(cart_1);
-      
-      
+      var received =  JSON.parse(data);     
       for(var x of received) {
         this.carts.push(x);
+        for(var prod of x.product) {
+          this.sumToPay += prod.price*prod.quantity;
+        }
       }
       
       

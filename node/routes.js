@@ -91,7 +91,7 @@ router.route('/product').get((req, res, next) => {
     }
 }).put((req, res, next) => {
     if(req.body.name && req.body.quantity) {
-        productModel.find({name: req.body.name}, (err, data) => {
+        productModel.findOne({name: req.body.name}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
                 if(req.body.description) {
@@ -176,13 +176,25 @@ router.route('/cart/:username').get((req, res, next) => {
     }
 }).delete((req, res, next) => {
     if(req.body.name) {
-        cartModel.findOne({username: req.body.username}, (err, data) => {
+        cartModel.findOne({username: req.body.username}, (err, data) => { 
             if(err) return res.status(500).send('DB hiba');
             if(data) {
-                data.delete((error) => {
+                for(prod in data.product) {
+                    if(prod.name == req.body.name){
+                        //del
+                        console.log('Kosarelem torlese');
+                        prod.delete((error) => {
+                            if(error) return res.status(500).send('A torles soran hiba tortent');
+                            return res.status(200).send('Sikeres torles tortent');
+                        })
+                    }
+                }
+                //TODO: lehet itt forral vegig kell iteralni a producton
+                /**data.delete((error) => {
                     if(error) return res.status(500).send('A torles soran hiba tortent');
                     return res.status(200).send('Sikeres torles tortent');
-                })
+                })**/
+                return res.status(400).send('Nem talalhato ilyen kosarelem');
             } else {
                 return res.status(400).send('Nincs ilyen username az adatbázisban');
             }

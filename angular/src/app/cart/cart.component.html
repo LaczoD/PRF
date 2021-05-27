@@ -20,7 +20,10 @@
           </li>
         </div>
     </ul>
-    <button (click)="buy()">Megrendelés</button>
-    <button (click)="logout()">Kijelentkezés</button>
+    <div>
+      Összesen: {{sumToPay}} Ft
+      <button (click)="buy()">Megrendelés</button>
+      <button (click)="logout()">Kijelentkezés</button>  
+    </div>
 
   </div>

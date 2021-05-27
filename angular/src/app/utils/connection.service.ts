@@ -1,11 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { throwError } from 'rxjs/internal/observable/throwError';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConnectionService {
+
 
   constructor(private http: HttpClient) { }
 
@@ -20,6 +22,10 @@ export class ConnectionService {
 
   getProducts() {
    return this.http.get(environment.serverUrl+'/product',{responseType: 'text', withCredentials: true}); 
+  }
+
+  putProduct(prod : {name:String, description:String, price:Number, quantity:Number}) {
+    return this.http.put(environment.serverUrl+'/product',{data: prod},{responseType: 'text', withCredentials: true});
   }
 
 
@@ -37,30 +43,51 @@ export class ConnectionService {
     return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'),  responseType: 'text', withCredentials: true});
   }
 
-  putCart(prod: {name:String, description:String, price:Number, quantity:Number} ) {
-
-    /** TODO:
+  putCart(obj: {name:String, description:String, price:Number, quantity:Number} ) {
+    /**
      * -Dekrementálom a product quantityt quantity: old.data.quantity
-     * -rákeresek a product nevére
-     * --Ha van már olyanom, akkor put és inkrementalom a quantityt a kosárban
-     * --Ha nincs olyanom, akkor post és létrehozom a productot benne
-     * 
+     * -rákeresek a product nevére a kosárban
+     * -Ha van már olyanom, akkor put és inkrementalom a quantityt a kosárban
+     * -Ha nincs olyanom, akkor létrehozom a productot benne
      * **/
 
-    var product:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
+    //Dekrementálom a product quantityt quantity: old.data.quantity -> putProduct
+    var inCart = false;
+    var prod:any;
+    prod = obj;
+    prod.quantity = prod.quantity-1;
+    if(prod.quantity == 0) {
+      console.log('Nincs tobb arucikk a raktarban!');
+      return throwError("Nincs tobb arucikk a raktarban!");
+    }
+    this.putProduct(prod);
+
+    //Rákeresek a product nevére a kosárban
+    var products:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
     this.getCart().subscribe((data) => {
-      for(var x of JSON.parse(data)) {
-        product.push(x);
+      for(var x of JSON.parse(data)[0].product) {
+        //Ha van már olyanom, akkor put és inkrementalom a quantityt a kosárban
+        if(x.name == prod.name) {
+          inCart = true;
+          x.quantity = x.quantity+1;
+        }
+        products.push(x);
       }
     }, error => {
       console.log('Hiba getCart-ban, a product tömb olvasásánál: ', error);
     });
-    product.push(prod);
-
-    //TODO: inkrementalni hogy ha van már olyanom
-    return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: product},{responseType: 'text', withCredentials: true});
+    //Ha nincs olyanom, akkor létrehozom a productot benne
+    if(!inCart) {
+      prod.quantity = 1;
+      products.push(prod);
+    }
+    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' -> PUT: '+ JSON.stringify(products));
+    return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: products},{responseType: 'text', withCredentials: true});
   }
 
+  delCart(prod: any) {
+    return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
+  }
 
   getOrder() {
     return this.http.get(environment.serverUrl+'/order',{responseType: 'text', withCredentials: true});
