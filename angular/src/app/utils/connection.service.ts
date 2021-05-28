@@ -55,7 +55,7 @@ export class ConnectionService {
     var inCart = false;
     var prod:any;
     prod = obj;
-    prod.quantity = prod.quantity-1;
+    //prod.quantity = prod.quantity-1;
     if(prod.quantity == 0) {
       console.log('Nincs tobb arucikk a raktarban!');
       return throwError("Nincs tobb arucikk a raktarban!");
@@ -81,12 +81,24 @@ export class ConnectionService {
       prod.quantity = 1;
       products.push(prod);
     }
-    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' -> PUT: '+ JSON.stringify(products));
+    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' username: '+ localStorage.getItem('user') +' -> PUT: '+ JSON.stringify(products));
     return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: products},{responseType: 'text', withCredentials: true});
   }
 
   delCart(prod: any) {
-    return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
+    let usr = JSON.stringify(localStorage.getItem('user'));
+    usr = usr.replace('"','');
+    usr = usr.replace('"','');
+    let params = new HttpParams().set('username', usr);
+    
+    //TODO: params-ba beletenni a prodot valahogy, mert így nem jó:
+    
+    params.set('product', prod);
+    if(prod.quantity == 0) {
+      return this.http.delete(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{params: params, responseType: 'text', withCredentials: true});
+    } else {
+      return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
+    }
   }
 
   getOrder() {

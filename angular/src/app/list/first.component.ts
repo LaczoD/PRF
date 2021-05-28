@@ -32,13 +32,25 @@ export class FirstComponent implements OnInit {
   }
 
 
-  toCart(prod: {name:String, description:String, price:Number, quantity:Number}) {
+  toCart(obj: {name:String, description:String, price:Number, quantity:Number}) {
+
+    var prod:any;
+    prod = obj;
+    prod.quantity = prod.quantity-1;
     console.log('Kosarba dobva: ' + prod.name);
+
+    this.connectionService.putProduct(prod).subscribe(data => {
+      for(var x of JSON.parse(data)) {
+        this.products.push(x);
+      }
+    });
+
     this.connectionService.putCart(prod).subscribe(data => {
-      for(var x of JSON.parse(data)[0].product) {
+      for(var x of JSON.parse(data).product) {
         this.products.push(x);
         console.log(this.products);
       }
+
       this.connectionService.getProducts().subscribe(data => {
         for(var x of JSON.parse(data)) {
           this.products.push(x);

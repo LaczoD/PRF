@@ -142,6 +142,7 @@ router.route('/cart/:username').get((req, res, next) => {
     })
 }).post((req, res, next) => {
     if(req.body.username) {
+        console.log();
         cartModel.findOne({username: req.body.username, name: req.body.product.name}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
@@ -175,12 +176,12 @@ router.route('/cart/:username').get((req, res, next) => {
         return res.status(400).send('Nem volt id vagy value');
     }
 }).delete((req, res, next) => {
-    if(req.body.name) {
-        cartModel.findOne({username: req.body.username}, (err, data) => { 
+    if(req.query.username && req.query.product) {
+        cartModel.findOne({username: req.query.username}, (err, data) => { 
             if(err) return res.status(500).send('DB hiba');
-            if(data) {
-                for(prod in data.product) {
-                    if(prod.name == req.body.name){
+            if(req.query.product) {
+                for(prod in req.query.product) {
+                    if(prod.name == req.query.product.name){
                         //del
                         console.log('Kosarelem torlese');
                         prod.delete((error) => {
@@ -200,7 +201,7 @@ router.route('/cart/:username').get((req, res, next) => {
             }
         })
     } else {
-        return res.status(400).send('Nem volt usernev');
+        return res.status(400).send('Nem volt user vagy product nev!');
     }
 })
 

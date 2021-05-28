@@ -36,7 +36,7 @@ export class CartComponent implements OnInit {
       this.connectionService.delCart(prod).subscribe(data => {
         console.log("Arucikk sikeres uritese a kosarbol!");
       },err => {
-        console.log("Hiba az arucikk uritese kozben!");
+        console.log("Hiba az arucikk uritese kozben: ", err);
         this.connectionService.createCart();
       });
     } else {
@@ -44,7 +44,7 @@ export class CartComponent implements OnInit {
       this.connectionService.putCart(prod).subscribe(data => {
         console.log("Arucikk dekrementalasa!");
       },err => {
-        console.log("Hiba az arucikk dekrementalasa kozben!");
+        console.log("Hiba az arucikk dekrementalasa kozben: ", err);
         this.connectionService.createCart();
       });
     }
