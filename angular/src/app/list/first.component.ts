@@ -37,27 +37,29 @@ export class FirstComponent implements OnInit {
     var prod:any;
     prod = obj;
     prod.quantity = prod.quantity-1;
+    obj.quantity = prod.quantity;
     console.log('Kosarba dobva: ' + prod.name);
 
     this.connectionService.putProduct(prod).subscribe(data => {
-      for(var x of JSON.parse(data)) {
-        this.products.push(x);
-      }
-    });
+      this.products = [];
+      prod.quantity=1;
 
-    this.connectionService.putCart(prod).subscribe(data => {
-      for(var x of JSON.parse(data).product) {
-        this.products.push(x);
-        console.log(this.products);
-      }
+      this.connectionService.putCart(prod).subscribe(data => {
+        
+        this.connectionService.getProducts().subscribe(data => {
+          for(var x of JSON.parse(data)) {
+            this.products.push(x);
+          }
+        }, error => {
+          console.log('Hiba a getproducts kozben: ', error);
+        });
 
-      this.connectionService.getProducts().subscribe(data => {
-        for(var x of JSON.parse(data)) {
-          this.products.push(x);
-        }
+      }, error => {
+        console.log('Hiba kosarba adas soran: ', error);
       });
+
     }, error => {
-      console.log('Hiba kosarba adas soran: ', error);
+      console.log('Hiba a putProduct kozben: ', error);
     });
   }
 

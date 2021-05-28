@@ -90,17 +90,17 @@ router.route('/product').get((req, res, next) => {
         return res.status(400).send('Nem volt id vagy value');
     }
 }).put((req, res, next) => {
-    if(req.body.name && req.body.quantity) {
-        productModel.findOne({name: req.body.name}, (err, data) => {
+    if(req.body.product) {
+        productModel.findOne({name: req.body.product.name}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
-                if(req.body.description) {
-                    data.description = req.body.description;
+                if(req.body.product.description) {
+                    data.description = req.body.product.description;
                 }
-                if(req.body.price) {
-                    data.price = req.body.price;
+                if(req.body.product.price) {
+                    data.price = req.body.product.price;
                 }
-                data.quantity = req.body.quantity;
+                data.quantity = req.body.product.quantity;
                 data.save((error) => {
                     if(error) return res.status(500).send('A mentes soran hiba tortent');
                     return res.status(200).send('Sikeres mentes tortent');
@@ -141,8 +141,8 @@ router.route('/cart/:username').get((req, res, next) => {
         console.log('Nincs ilyen user kosar!');
     })
 }).post((req, res, next) => {
+    console.log('POST CART: username: ' + req.body.username+ ' ' + req.body.product+ ' ' + req.body.username && req.body.product);
     if(req.body.username) {
-        console.log();
         cartModel.findOne({username: req.body.username, name: req.body.product.name}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
             if(data) {
@@ -159,6 +159,7 @@ router.route('/cart/:username').get((req, res, next) => {
         return res.status(400).send('Nem volt username vagy product');
     }
 }).put((req, res, next) => {
+    console.log('PUT CART: username: ' + req.body.username+ ' ' + req.body.product+ ' ' + req.body.username && req.body.product);
     if(req.body.username && req.body.product) {
         cartModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');

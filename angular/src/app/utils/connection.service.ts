@@ -25,7 +25,7 @@ export class ConnectionService {
   }
 
   putProduct(prod : {name:String, description:String, price:Number, quantity:Number}) {
-    return this.http.put(environment.serverUrl+'/product',{data: prod},{responseType: 'text', withCredentials: true});
+    return this.http.put(environment.serverUrl+'/product',{product: prod},{responseType: 'text', withCredentials: true});
   }
 
 
@@ -60,12 +60,13 @@ export class ConnectionService {
       console.log('Nincs tobb arucikk a raktarban!');
       return throwError("Nincs tobb arucikk a raktarban!");
     }
-    this.putProduct(prod);
 
     //Rákeresek a product nevére a kosárban
     var products:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
+  
     this.getCart().subscribe((data) => {
-      for(var x of JSON.parse(data)[0].product) {
+          
+      for(var x of JSON.parse(data)[0].product) { 
         //Ha van már olyanom, akkor put és inkrementalom a quantityt a kosárban
         if(x.name == prod.name) {
           inCart = true;
@@ -73,16 +74,21 @@ export class ConnectionService {
         }
         products.push(x);
       }
-    }, error => {
-      console.log('Hiba getCart-ban, a product tömb olvasásánál: ', error);
-    });
-    //Ha nincs olyanom, akkor létrehozom a productot benne
+
+          //Ha nincs olyanom, akkor létrehozom a productot benne
     if(!inCart) {
       prod.quantity = 1;
       products.push(prod);
     }
-    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' username: '+ localStorage.getItem('user') +' -> PUT: '+ JSON.stringify(products));
-    return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: products},{responseType: 'text', withCredentials: true});
+
+    }, error => {
+      console.log('Hiba getCart-ban, a product tömb olvasásánál: ', error);
+    });
+    
+    //TODO valahogy megvarni azt a szajbabaszott getCartot
+    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' username: '+ localStorage.getItem('user') +' -> PUT: product: '+ JSON.stringify(products));
+    return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
+  
   }
 
   delCart(prod: any) {
