@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const userModel = mongoose.model('user');
 const productModel = mongoose.model('product');
 const cartModel = mongoose.model('cart');
-const orderModel = mongoose.model('cart');
+const orderModel = mongoose.model('order');
 
 router.route('/login').post((req, res, next) => {
     if(req.body.username, req.body.password) {
@@ -209,7 +209,7 @@ router.route('/cart/:username').get((req, res, next) => {
 //order
 
 router.route('/order/:username').get((req, res, next) => {
-    orderModel.findOne({username: req.body.username}, (err, data) => {
+    orderModel.find({username: req.query.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);
     })
@@ -220,8 +220,8 @@ router.route('/order/:username').get((req, res, next) => {
             if(data) {
                 return res.status(400).send('már van ilyen product');
             } else {
-                const example = new orderModel({username: req.body.username, cart: req.body.cart, date: Date.now});
-                example.save((error) => {
+                const order = new orderModel({username: req.body.username, product: req.body.product, date: Date.now});
+                order.save((error) => {
                     if(error) return res.status(500).send('A mentes soran hiba tortent');
                     return res.status(200).send('Sikeres mentes tortent');
                 })
@@ -231,21 +231,17 @@ router.route('/order/:username').get((req, res, next) => {
         return res.status(400).send('Nem volt username vagy product');
     }
 }).put((req, res, next) => {
-    if(req.body.username && req.body.cart) {
+    if(req.body.username) {
         orderModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
-            if(data) {
-                data.cart = req.body.cart;
-                data.save((error) => {
-                    if(error) return res.status(500).send('A mentes soran hiba tortent');
-                    return res.status(200).send('Sikeres mentes tortent');
-                })
-            } else {
-                return res.status(400).send('Nincs ilyen id az adatbazisban');
-            }
+            data.product.put(req.body.product);
+            data.save((error) => {
+                if(error) return res.status(500).send('A mentes soran hiba tortent');
+                return res.status(200).send('Sikeres mentes tortent');
+            })
         })
     } else {
-        return res.status(400).send('Nem volt id vagy value');
+        return res.status(400).send('Nem volt ilyen order meg!');
     }
 }).delete((req, res, next) => {
     if(req.body.name) {

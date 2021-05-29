@@ -11,14 +11,16 @@ export class ConnectionService {
 
   constructor(private http: HttpClient) { }
 
-  greet() {
-    console.log('Hello from this humble service');
-    return this.http.get(environment.serverUrl + '/status', {responseType: 'text', withCredentials: true}); //aszinkronitas
-  }
+
+  //-----------DELETE THIS-------
 
   getTodos() {
     return this.http.get(environment.springUrl + '/todos');
   }
+
+  //------------------------------
+
+//product
 
   getProducts() {
    return this.http.get(environment.serverUrl+'/product',{responseType: 'text', withCredentials: true}); 
@@ -28,6 +30,8 @@ export class ConnectionService {
     return this.http.put(environment.serverUrl+'/product',{product: prod},{responseType: 'text', withCredentials: true});
   }
 
+
+//cart
 
   getCart() {
     let usr = JSON.stringify(localStorage.getItem('user'));
@@ -85,7 +89,8 @@ export class ConnectionService {
       console.log('Hiba getCart-ban, a product tömb olvasásánál: ', error);
     });
     
-    //TODO valahogy megvarni azt a szajbabaszott getCartot
+    //TODO valahogy megvarni a getCartot
+    //valamiert nem hivodik meg ez a retek
     console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' username: '+ localStorage.getItem('user') +' -> PUT: product: '+ JSON.stringify(products));
     return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
   
@@ -107,8 +112,23 @@ export class ConnectionService {
     }
   }
 
+//order
+  
   getOrder() {
-    return this.http.get(environment.serverUrl+'/order',{responseType: 'text', withCredentials: true});
+    let usr = JSON.stringify(localStorage.getItem('user'));
+    usr = usr.replace('"','');
+    usr = usr.replace('"','');
+    let params = new HttpParams().set('username', usr);
+    return this.http.get(environment.serverUrl+'/order/'+localStorage.getItem('user'),{params: params, responseType: 'text', withCredentials: true});
+  }
+
+  createOrder(prod : {name:String, description:String, price:Number, quantity:Number}[]) {
+    return this.http.put(environment.serverUrl+'/order/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod,  responseType: 'text', withCredentials: true});
+  }
+
+  putOrder(prod : {name:String, description:String, price:Number, quantity:Number}[]) {
+    //TODO ez meg nem jo
+    return this.http.put(environment.serverUrl+'/order/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
   }
 
 }

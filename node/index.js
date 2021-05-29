@@ -49,7 +49,6 @@ mongoose.connection.on('error', (err) => {
     console.log('Hiba tortént', err);
 })
 
-require('./example.model');
 require('./user.model');
 require('./product.model');
 require('./cart.model');

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConnectionService } from '../utils/connection.service';
 import { Router } from '@angular/router';
+import { isEmptyExpression } from '@angular/compiler';
 
 @Component({
   selector: 'app-cart',
@@ -53,6 +54,34 @@ export class CartComponent implements OnInit {
 
   buy() {
     //TODO everything goes to orders
+    this.connectionService.getOrder().subscribe(data => {
+      console.log(JSON.stringify(data));
+      //TODO: ez az if szar. azt kene csekkolni, hogy letezik-e order
+      if(JSON.parse(data) == []) {
+        this.connectionService.createOrder(this.products).subscribe(data => {
+          console.log("ELSO VASARLAS");
+        },err => {
+          console.log("Hiba elso vasarlas kozben: ", err);
+          this.connectionService.createCart();
+        });
+      } else {
+        this.connectionService.putOrder(this.products).subscribe(data => {
+          console.log("VASARLAS");
+        },err => {
+          console.log("Hiba tovabbi vasarlas kozben: ", err);
+          this.connectionService.createCart();
+        });
+      }
+    },err => {
+      console.log("Hiba a getOrder kozben: ", err);
+      this.connectionService.createCart();
+    });
+    
+
+    
+    //post new cart
+  
+  
   }
 
   goToList() {
