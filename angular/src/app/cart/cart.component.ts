@@ -32,7 +32,7 @@ export class CartComponent implements OnInit {
     //if quantity = 0 del object from db
     var prod:any = product;
     prod.quantity = prod.quantity-1;
-    if (prod.quantity == 0) {
+    if (prod.quantity <= 0) {
       //del
       this.connectionService.delCart(prod).subscribe(data => {
         console.log("Arucikk sikeres uritese a kosarbol!");
@@ -53,22 +53,32 @@ export class CartComponent implements OnInit {
   }
 
   buy() {
-    //TODO everything goes to orders
     this.connectionService.getOrder().subscribe(data => {
-      console.log(JSON.stringify(data));
-      //TODO: ez az if szar. azt kene csekkolni, hogy letezik-e order
-      if(JSON.parse(data) == []) {
+
+        if(JSON.parse(data).product != '') {
+        this.connectionService.putOrder(this.products).subscribe(data => {
+          console.log("VASARLAS");
+          this.connectionService.createCart().subscribe(data => {
+            console.log("Kosar uritve");
+          },err => {
+            console.log("Hiba kosar uritese kozben: ", err);
+            this.connectionService.createCart();
+          });
+        },err => {
+          console.log("Hiba tovabbi vasarlas kozben: ", err);
+          this.connectionService.createCart();
+        });
+      } else {
         this.connectionService.createOrder(this.products).subscribe(data => {
           console.log("ELSO VASARLAS");
         },err => {
           console.log("Hiba elso vasarlas kozben: ", err);
           this.connectionService.createCart();
         });
-      } else {
-        this.connectionService.putOrder(this.products).subscribe(data => {
-          console.log("VASARLAS");
+        this.connectionService.createCart().subscribe(data => {
+          console.log("Kosar uritve");
         },err => {
-          console.log("Hiba tovabbi vasarlas kozben: ", err);
+          console.log("Hiba kosar uritese kozben: ", err);
           this.connectionService.createCart();
         });
       }
@@ -76,12 +86,6 @@ export class CartComponent implements OnInit {
       console.log("Hiba a getOrder kozben: ", err);
       this.connectionService.createCart();
     });
-    
-
-    
-    //post new cart
-  
-  
   }
 
   goToList() {

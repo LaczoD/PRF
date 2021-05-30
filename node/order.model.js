@@ -7,7 +7,7 @@ var orderSchema = new mongoose.Schema({
         description: {type: String, required: false},
         price: {type: Number, required: true},
         quantity: {type: Number, required: true}}],
-    date: {type: Date, required: false},
+    date: {type: Date, required: false}
 }, {collection: 'order'});
 
 mongoose.model('order', orderSchema);

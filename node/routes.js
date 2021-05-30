@@ -191,11 +191,7 @@ router.route('/cart/:username').get((req, res, next) => {
                         })
                     }
                 }
-                //TODO: lehet itt forral vegig kell iteralni a producton
-                /**data.delete((error) => {
-                    if(error) return res.status(500).send('A torles soran hiba tortent');
-                    return res.status(200).send('Sikeres torles tortent');
-                })**/
+
                 return res.status(400).send('Nem talalhato ilyen kosarelem');
             } else {
                 return res.status(400).send('Nincs ilyen username az adatbázisban');
@@ -220,9 +216,9 @@ router.route('/order/:username').get((req, res, next) => {
             if(data) {
                 return res.status(400).send('már van ilyen product');
             } else {
-                const order = new orderModel({username: req.body.username, product: req.body.product, date: Date.now});
+                const order = new orderModel({username: req.body.username, product: req.body.product});
                 order.save((error) => {
-                    if(error) return res.status(500).send('A mentes soran hiba tortent');
+                    if(error) return res.status(500).send('A mentes soran hiba tortent: '+ error);
                     return res.status(200).send('Sikeres mentes tortent');
                 })
             }

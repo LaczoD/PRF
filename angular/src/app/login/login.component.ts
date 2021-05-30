@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     if (this.username != '' && this.password != '') {
-      //TODO: iderakni egy accesslevel lekerest
+
       this.loginService.login(this.username, this.password, this.accessLevel).subscribe(msg => {
         console.log(msg);
         localStorage.setItem('user', this.username);

@@ -12,13 +12,6 @@ export class ConnectionService {
   constructor(private http: HttpClient) { }
 
 
-  //-----------DELETE THIS-------
-
-  getTodos() {
-    return this.http.get(environment.springUrl + '/todos');
-  }
-
-  //------------------------------
 
 //product
 
@@ -79,7 +72,7 @@ export class ConnectionService {
         products.push(x);
       }
 
-          //Ha nincs olyanom, akkor létrehozom a productot benne
+    //Ha nincs olyanom, akkor létrehozom a productot benne
     if(!inCart) {
       prod.quantity = 1;
       products.push(prod);
@@ -89,8 +82,7 @@ export class ConnectionService {
       console.log('Hiba getCart-ban, a product tömb olvasásánál: ', error);
     });
     
-    //TODO valahogy megvarni a getCartot
-    //valamiert nem hivodik meg ez a retek
+    //Ez nem hajtodik vegre szekvencialisan
     console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' username: '+ localStorage.getItem('user') +' -> PUT: product: '+ JSON.stringify(products));
     return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
   
@@ -100,10 +92,8 @@ export class ConnectionService {
     let usr = JSON.stringify(localStorage.getItem('user'));
     usr = usr.replace('"','');
     usr = usr.replace('"','');
-    let params = new HttpParams().set('username', usr);
-    
-    //TODO: params-ba beletenni a prodot valahogy, mert így nem jó:
-    
+    let params = new HttpParams();
+    params.set('username', usr);
     params.set('product', prod);
     if(prod.quantity == 0) {
       return this.http.delete(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{params: params, responseType: 'text', withCredentials: true});
@@ -127,7 +117,6 @@ export class ConnectionService {
   }
 
   putOrder(prod : {name:String, description:String, price:Number, quantity:Number}[]) {
-    //TODO ez meg nem jo
     return this.http.put(environment.serverUrl+'/order/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
   }
 

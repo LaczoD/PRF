@@ -14,13 +14,13 @@
 
   
     <ul>
-        <div *ngFor="let x of carts">
-            <li *ngFor="let y of x.products">
-                {{y.name}}: {{y.price}} Ft {{y.quantity}} db megrendelve
-            </li>
-        </div>
-      </ul>
-      <button (click)="logout()">Kijelentkezés</button>
+
+          <li *ngFor="let y of this.products">
+              {{y.name}}: {{y.price}} Ft {{y.quantity}} db megrendelve
+          </li>
+
+    </ul>
+    <button (click)="logout()">Kijelentkezés</button>
 
 
   </div>
