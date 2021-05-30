@@ -22,8 +22,7 @@ mongoose.set('useUnifiedTopology', true);
 
 mongoose.connect(dbUrl);
 
-const whitelist = ['https://<project_id>.web.app', 
-'https://<project_id>.firebaseapp.com', 
+const whitelist = ['https://laczod-prf-beadando.herokuapp.com',
 'http://localhost:4200'];
 
 var corsOptions = {
@@ -86,21 +85,16 @@ app.use(expressSession({ secret: 'prf2021lassananodejsvegereerunk', resave: true
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ez a default root akkor ha az Angular külön fut pl. Firebase-en
-
-app.get('/', (req, res, next) => {
-    res.send('Hello World!');
-})
 
 // ez a rész akkor ha a node public mappájában van az Angular kliens
 
-/* app.use(express.static(path.join(__dirname, 'public')))
+ app.use(express.static(path.join(__dirname, 'public')))
 .set('views', path.join(__dirname, 'views'))
 .set('view engine', 'ejs')
 .get('/', (req, res) => res.render('pages/index'));
 
 app.use('/', require('./routes'));
-app.use('/secondary', require('./routes')); */
+app.use('/secondary', require('./routes'));
 
 app.use('/', require('./routes'));
 

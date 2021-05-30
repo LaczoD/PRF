@@ -1,6 +1,6 @@
 {
     "/server": {
-      "target": "https://thawing-forest-98860.herokuapp.com",
+      "target": "https://laczod-prf-beadando.herokuapp.com",
       "secure": true,
       "changeOrigin": true,
       "pathRewrite": {
