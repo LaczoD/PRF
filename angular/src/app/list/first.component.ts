@@ -46,7 +46,7 @@ export class FirstComponent implements OnInit {
     prod = JSON.parse(JSON.stringify(obj));
     
     if(prod.quantity == 0) {
-      console.log('Nincs tobb arucikk a raktarban!');
+      console.log('Nincs tobb arucikk a keszleten!');
       return;
     }
 
@@ -71,7 +71,6 @@ export class FirstComponent implements OnInit {
       }
 
       this.connectionService.putCart(products).subscribe((data) => {
-        console.log('obj qtty: '+obj.quantity);
         obj.quantity--;
         this.connectionService.putProduct(obj).subscribe((data) => {
         }, err => {
