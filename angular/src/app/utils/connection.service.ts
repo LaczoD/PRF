@@ -33,7 +33,6 @@ export class ConnectionService {
     usr = usr.replace('"','');
     let params = new HttpParams().set('username', usr);
 
-    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' - username: '+ usr);
     return this.http.get(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{params: params, responseType: 'text', withCredentials: true});
   }
 
@@ -42,7 +41,6 @@ export class ConnectionService {
   }
 
   putCart(products: {name:String, description:String, price:Number, quantity:Number}[] ) {
-    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' username: '+ localStorage.getItem('user') +' -> PUT: products: '+ JSON.stringify(products));
     return this.http.put(environment.serverUrl+'/cart/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: products},{responseType: 'text', withCredentials: true});
   }
 
@@ -75,6 +73,7 @@ export class ConnectionService {
   }
 
   putOrder(prod : {name:String, description:String, price:Number, quantity:Number}[]) {
+    console.log(environment.serverUrl+'/cart/'+localStorage.getItem('user') + ' username: '+ localStorage.getItem('user') +' -> PUT: products: '+ JSON.stringify(prod));
     return this.http.put(environment.serverUrl+'/order/'+localStorage.getItem('user'),{username: localStorage.getItem('user'), product: prod},{responseType: 'text', withCredentials: true});
   }
 

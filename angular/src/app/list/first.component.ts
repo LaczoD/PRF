@@ -32,9 +32,7 @@ export class FirstComponent implements OnInit {
   }
 
 
-  toCart(obj: {name:String, description:String, price:number, quantity:number}) {
-    console.log('obj quantity: '+obj.quantity);
-    
+  toCart(obj: {name:String, description:String, price:number, quantity:number}) { 
     /**
      * -Dekrementálom a product quantityt quantity: old.data.quantity
      * -rákeresek a product nevére a kosárban
@@ -54,13 +52,9 @@ export class FirstComponent implements OnInit {
 
     //Rákeresek a product nevére a kosárban
     let products:Array<{name:String, description:String, price:number, quantity:number}> = [];
-
     this.connectionService.getCart().subscribe((data) => {
-      
       for(var cart of JSON.parse(data)) {
-
         for(var x of cart.product) {
-
         //Ha van már olyanom, akkor put és inkrementalom a quantityt a kosárban
           if(x.name == prod.name) {
             inCart = true;
@@ -78,16 +72,10 @@ export class FirstComponent implements OnInit {
 
       this.connectionService.putCart(products).subscribe((data) => {
         console.log('obj qtty: '+obj.quantity);
-        
-        console.log('putCart sikeres');
-        
         obj.quantity--;
         this.connectionService.putProduct(obj).subscribe((data) => {
-          console.log('product dekrementalas sikeres');
-          
         }, err => {
-          console.log(err);
-          
+          console.log(err); 
         });
 
       }, err => {

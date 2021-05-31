@@ -30,7 +30,7 @@ export class CartComponent implements OnInit {
 
     var prod:any = product;
     prod.quantity = prod.quantity-1;
-    var products: {name:String, description:String, price:Number, quantity:Number}[];
+    var products: {name:String, description:String, price:number, quantity:number}[];
     if (prod.quantity <= 0) {
       //del
  
@@ -46,10 +46,10 @@ export class CartComponent implements OnInit {
               i = JSON.parse(data).findIndex((x:any) => x.name === product.name);
               var prod = JSON.parse(data)[i];
               prod.quantity++;
-              console.log('inkremental product qtty: ',prod);
+
               
               this.connectionService.putProduct(prod).subscribe((data) => {
-                console.log('Sikeres inkerementalas');
+
                 
               }, err => {
                 console.log('Hiba a putProductban: '+err);
@@ -60,7 +60,7 @@ export class CartComponent implements OnInit {
               
             });
 
-            console.log('Sikeres putCart');
+
             this.reloadCart();
           }, err => {
             console.log(err);
@@ -75,24 +75,20 @@ export class CartComponent implements OnInit {
     } else {
       //put
       this.connectionService.putCart(prod).subscribe(data => {
-        console.log("Arucikk dekrementalasa!");
+
 
         this.connectionService.getProducts().subscribe((data) => {
           var i = JSON.parse(data).findIndex((x:any) => x.name === product.name);
           var prod = JSON.parse(data)[i];
           prod.quantity++;
-          console.log('inkremental product qtty: ',prod);
-          
+
           this.connectionService.putProduct(prod).subscribe((data) => {
-            console.log('Sikeres inkerementalas');
-            
           }, err => {
             console.log('Hiba a putProductban: '+err);
-            
           });
+
         }, err => {
           console.log(err);
-          
         });
 
       },err => {
@@ -104,30 +100,25 @@ export class CartComponent implements OnInit {
   }
 
   buy() {
-    //TODO:
-    //1. lecsekkolom hogy van-e ordere a usernek
-    // ha van, akkor putOrder
-    // ha nincs akkor pushOrder
-    //2. törlöm a kosar tartalmat
 
-    this.connectionService.getCart().subscribe(cart => {
-      //vegiglepkefni a datan
-      
+    this.connectionService.getCart().subscribe(c => {
       this.connectionService.getOrder().subscribe(d => {
-        var orders = JSON.parse(d).product;
-        for(var prod in JSON.parse(cart).product) {
+        var orders = JSON.parse(d)[0].product;
+        for(var prod of JSON.parse(c)[0].product) {
           orders.push(prod);
         }
+
         this.connectionService.putOrder(orders).subscribe(data => {
-          
-          
-          //delCart() kell ide
+          console.log('Sikeres putOrder');
+          this.connectionService.putCart([]).subscribe(data => {
+            console.log('Sikeres kosar torles');
+            this.reloadCart();
+          }, err => {
+            console.log(err);
+          });
         }, err => {
           console.log(err);
-          
         });
-        
-        //delCart() kell ide
       }, err => {
         console.log(err);
         

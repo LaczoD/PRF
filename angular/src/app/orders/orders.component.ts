@@ -29,18 +29,6 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.connectionService.getOrder().subscribe(data => {
-      
-      for(var x of JSON.parse(data)[0].product) {
-        this.products.push(x);
-      }
-
-    },err => {
-      console.log("Nem tortent meg rendeles!");
-      this.connectionService.createCart();
-    });
-
-
 
     this.products = [];
     this.connectionService.getOrder().subscribe(data => {
@@ -54,6 +42,7 @@ export class OrdersComponent implements OnInit {
       console.log("Hiba a kosar betoltese kozben!");
       this.connectionService.createCart();
     });
+  
   }
 
 }
