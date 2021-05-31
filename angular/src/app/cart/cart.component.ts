@@ -30,12 +30,9 @@ export class CartComponent implements OnInit {
 
     var prod:any = product;
     prod.quantity = prod.quantity-1;
-    var products: {name:String, description:String, price:number, quantity:number}[];
     if (prod.quantity <= 0) {
-      //del
- 
+      //del - eltavolitom a kosarelemet, majd inkrementalom az aruhazi darabszamot
       this.connectionService.getCart().subscribe((data) => {
-        
         for(var cart of JSON.parse(data)) {
           var i = cart.product.findIndex((x:any) => x.name === product.name);
           
@@ -46,47 +43,33 @@ export class CartComponent implements OnInit {
               i = JSON.parse(data).findIndex((x:any) => x.name === product.name);
               var prod = JSON.parse(data)[i];
               prod.quantity++;
-
-              
               this.connectionService.putProduct(prod).subscribe((data) => {
-
-                
               }, err => {
                 console.log('Hiba a putProductban: '+err);
-                
               });
             }, err => {
               console.log(err);
-              
             });
-
-
             this.reloadCart();
           }, err => {
             console.log(err);
-            
           });
         }
       }, err => {
         console.log(err);
       });
 
-
     } else {
-      //put
+      //put - dekrementalom a kosarelemet, majd inkrementalom az aruhazi darabszamot
       this.connectionService.putCart(prod).subscribe(data => {
-
-
         this.connectionService.getProducts().subscribe((data) => {
           var i = JSON.parse(data).findIndex((x:any) => x.name === product.name);
           var prod = JSON.parse(data)[i];
           prod.quantity++;
-
           this.connectionService.putProduct(prod).subscribe((data) => {
           }, err => {
             console.log('Hiba a putProductban: '+err);
           });
-
         }, err => {
           console.log(err);
         });
@@ -100,18 +83,17 @@ export class CartComponent implements OnInit {
   }
 
   buy() {
-
+    //lekerem az eddigi ordereket, hozzafuzom a jelenlegi kosaramat
     this.connectionService.getCart().subscribe(c => {
       this.connectionService.getOrder().subscribe(d => {
         var orders = JSON.parse(d)[0].product;
         for(var prod of JSON.parse(c)[0].product) {
           orders.push(prod);
         }
-
+        //eltarolom az uj orderemet
         this.connectionService.putOrder(orders).subscribe(data => {
-          console.log('Sikeres putOrder');
+          //kiuritem a jelenlegi kosaramat
           this.connectionService.putCart([]).subscribe(data => {
-            console.log('Sikeres kosar torles');
             this.reloadCart();
           }, err => {
             console.log(err);
@@ -121,50 +103,10 @@ export class CartComponent implements OnInit {
         });
       }, err => {
         console.log(err);
-        
       });
-      
-    
     }, err => {
       console.log(err);
-      
     });
-
-    /*
-    this.connectionService.getOrder().subscribe(data => {
-
-      if (JSON.parse(data).product != '') {
-        this.connectionService.putOrder(this.products).subscribe(data => {
-          console.log("VASARLAS");
-          this.connectionService.createCart().subscribe(data => {
-            console.log("Kosar uritve");
-          }, err => {
-            console.log("Hiba kosar uritese kozben: ", err);
-            this.connectionService.createCart();
-          });
-        }, err => {
-          console.log("Hiba tovabbi vasarlas kozben: ", err);
-          this.connectionService.createCart();
-        });
-      } else {
-        this.connectionService.createOrder(this.products).subscribe(data => {
-          console.log("ELSO VASARLAS");
-        }, err => {
-          console.log("Hiba elso vasarlas kozben: ", err);
-          this.connectionService.createCart();
-        });
-        this.connectionService.createCart().subscribe(data => {
-          console.log("Kosar uritve");
-        }, err => {
-          console.log("Hiba kosar uritese kozben: ", err);
-          this.connectionService.createCart();
-        });
-      }
-    }, err => {
-      console.log("Hiba a getOrder kozben: ", err);
-      this.connectionService.createCart();
-    });
-    */
   }
 
   goToList() {
@@ -186,8 +128,9 @@ export class CartComponent implements OnInit {
         }
       }
     },err => {
-      console.log("Hiba a kosar betoltese kozben!");
-      this.connectionService.createCart();
+      this.connectionService.createCart().subscribe(error => {
+        console.log("Hiba a kosar betoltese kozben! "+error+" "+err);
+      });
     });
   }
 

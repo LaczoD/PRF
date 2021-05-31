@@ -101,7 +101,6 @@ router.route('/product').get((req, res, next) => {
                     data.price = req.body.product.price;
                 }
                 data.quantity = req.body.product.quantity;
-                console.log('Put product: '+JSON.stringify(req.body.product));
                 data.save((error) => {
                     if(error) return res.status(500).send('A mentes soran hiba tortent');
                     return res.status(200).send('Sikeres mentes tortent');
@@ -137,12 +136,10 @@ router.route('/cart/:username').get((req, res, next) => {
     cartModel.find({username: req.query.username}, (err, data) => {
         if(err) return res.status(500).send('DB hiba');
         res.status(200).send(data);
-        console.log(req.query.username + ' cart get');
     }, err => {
         console.log('Nincs ilyen user kosar!');
     })
 }).post((req, res, next) => {
-    console.log('POST CART: username: ' + req.body.username+ ' ' + req.body.product+ ' ' + req.body.username && req.body.product);
     if(req.body.username) {
         cartModel.findOne({username: req.body.username, name: req.body.product.name}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
@@ -160,7 +157,6 @@ router.route('/cart/:username').get((req, res, next) => {
         return res.status(400).send('Nem volt username vagy product');
     }
 }).put((req, res, next) => {
-    console.log('PUT CART: username: ' + req.body.username+ ' ' + req.body.product+ ' ' + req.body.username && req.body.product);
     if(req.body.username && req.body.product) {
         cartModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
@@ -185,7 +181,6 @@ router.route('/cart/:username').get((req, res, next) => {
                 for(prod in data.product) {
                     if(prod.name == req.query.product.name){
                         //del
-                        console.log('Kosarelem torlese');
                         prod.delete((error) => {
                             if(error) return res.status(500).send('A torles soran hiba tortent');
                             return res.status(200).send('Sikeres torles tortent');
