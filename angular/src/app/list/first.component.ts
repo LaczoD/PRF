@@ -16,7 +16,7 @@ export class FirstComponent implements OnInit {
 
   title = 'Webshop';
 
-  products:Array<{name:String, description:String, price:Number, quantity:Number}> = [];
+  products:Array<{name:String, description:String, price:number, quantity:number}> = [];
 
 
   goToCart() {
@@ -32,35 +32,71 @@ export class FirstComponent implements OnInit {
   }
 
 
-  toCart(obj: {name:String, description:String, price:Number, quantity:Number}) {
+  toCart(obj: {name:String, description:String, price:number, quantity:number}) {
+    console.log('obj quantity: '+obj.quantity);
+    
+    /**
+     * -Dekrementálom a product quantityt quantity: old.data.quantity
+     * -rákeresek a product nevére a kosárban
+     * -Ha van már olyanom, akkor put és inkrementalom a quantityt a kosárban
+     * -Ha nincs olyanom, akkor létrehozom a productot benne
+      */
 
+    //Dekrementálom a product quantityt quantity: old.data.quantity -> putProduct
+    var inCart = false;
     var prod:any;
-    prod = obj;
-    prod.quantity = prod.quantity-1;
-    obj.quantity = prod.quantity;
-    console.log('Kosarba dobva: ' + prod.name);
+    prod = JSON.parse(JSON.stringify(obj));
+    
+    if(prod.quantity == 0) {
+      console.log('Nincs tobb arucikk a raktarban!');
+      return;
+    }
 
-    this.connectionService.putProduct(prod).subscribe(data => {
-      this.products = [];
-      prod.quantity=1;
+    //Rákeresek a product nevére a kosárban
+    let products:Array<{name:String, description:String, price:number, quantity:number}> = [];
 
-      this.connectionService.putCart(prod).subscribe(data => {
-        
-        this.connectionService.getProducts().subscribe(data => {
-          for(var x of JSON.parse(data)) {
-            this.products.push(x);
+    this.connectionService.getCart().subscribe((data) => {
+      
+      for(var cart of JSON.parse(data)) {
+
+        for(var x of cart.product) {
+
+        //Ha van már olyanom, akkor put és inkrementalom a quantityt a kosárban
+          if(x.name == prod.name) {
+            inCart = true;
+            x.quantity = x.quantity+1;
           }
-        }, error => {
-          console.log('Hiba a getproducts kozben: ', error);
+          products.push(x);
+        }
+      }
+
+      //Ha nincs olyanom, akkor létrehozom a productot benne
+      if(!inCart) {
+        prod.quantity = 1;
+        products.push(prod);
+      }
+
+      this.connectionService.putCart(products).subscribe((data) => {
+        console.log('obj qtty: '+obj.quantity);
+        
+        console.log('putCart sikeres');
+        
+        obj.quantity--;
+        this.connectionService.putProduct(obj).subscribe((data) => {
+          console.log('product dekrementalas sikeres');
+          
+        }, err => {
+          console.log(err);
+          
         });
 
-      }, error => {
-        console.log('Hiba kosarba adas soran: ', error);
+      }, err => {
+        console.log(err);
       });
-
     }, error => {
-      console.log('Hiba a putProduct kozben: ', error);
+      console.log('Hiba getCart-ban, a product tömb olvasásánál: ', error);
     });
+
   }
 
   ngOnInit(): void {
@@ -71,5 +107,6 @@ export class FirstComponent implements OnInit {
     });
 
   }
+
 
 }

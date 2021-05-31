@@ -34,9 +34,24 @@ export class OrdersComponent implements OnInit {
       for(var x of JSON.parse(data)[0].product) {
         this.products.push(x);
       }
-      
+
     },err => {
       console.log("Nem tortent meg rendeles!");
+      this.connectionService.createCart();
+    });
+
+
+
+    this.products = [];
+    this.connectionService.getOrder().subscribe(data => {
+      var received =  JSON.parse(data);     
+      for(var carts of received) {
+        for(var prod of carts.product) {
+          this.products.push(prod);
+        }
+      }
+    },err => {
+      console.log("Hiba a kosar betoltese kozben!");
       this.connectionService.createCart();
     });
   }

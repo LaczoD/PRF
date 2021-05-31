@@ -101,6 +101,7 @@ router.route('/product').get((req, res, next) => {
                     data.price = req.body.product.price;
                 }
                 data.quantity = req.body.product.quantity;
+                console.log('Put product: '+JSON.stringify(req.body.product));
                 data.save((error) => {
                     if(error) return res.status(500).send('A mentes soran hiba tortent');
                     return res.status(200).send('Sikeres mentes tortent');
@@ -181,7 +182,7 @@ router.route('/cart/:username').get((req, res, next) => {
         cartModel.findOne({username: req.query.username}, (err, data) => { 
             if(err) return res.status(500).send('DB hiba');
             if(req.query.product) {
-                for(prod in req.query.product) {
+                for(prod in data.product) {
                     if(prod.name == req.query.product.name){
                         //del
                         console.log('Kosarelem torlese');
@@ -213,15 +214,12 @@ router.route('/order/:username').get((req, res, next) => {
     if(req.body.username) {
         orderModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
-            if(data) {
-                return res.status(400).send('már van ilyen product');
-            } else {
-                const order = new orderModel({username: req.body.username, product: req.body.product});
-                order.save((error) => {
-                    if(error) return res.status(500).send('A mentes soran hiba tortent: '+ error);
-                    return res.status(200).send('Sikeres mentes tortent');
-                })
-            }
+            const order = new orderModel({username: req.body.username, product: req.body.product});
+            order.save((error) => {
+                if(error) return res.status(500).send('A mentes soran hiba tortent: '+ error);
+                return res.status(200).send('Sikeres mentes tortent');
+            })
+
         })
     } else {
         return res.status(400).send('Nem volt username vagy product');
@@ -230,7 +228,7 @@ router.route('/order/:username').get((req, res, next) => {
     if(req.body.username) {
         orderModel.findOne({username: req.body.username}, (err, data) => {
             if(err) return res.status(500).send('DB hiba');
-            data.product.put(req.body.product);
+            data.product = req.body.product;
             data.save((error) => {
                 if(error) return res.status(500).send('A mentes soran hiba tortent');
                 return res.status(200).send('Sikeres mentes tortent');
